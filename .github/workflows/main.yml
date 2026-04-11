@@ -6,11 +6,11 @@ on:
     - cron: "*/5 * * * *"
 
 jobs:
-  build:
+  run-bot:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -18,12 +18,11 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install Requirements
+      - name: Run Commands
         run: |
-          pip install pyTelegramBotAPI
-
-      - name: Run Your Commands
-        run: |
+          ls
+          unzip -o Dipak.zip
+          ls
           cd Dipak
           ls
           pip install telebot
