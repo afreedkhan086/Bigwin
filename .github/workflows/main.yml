@@ -1,7 +1,6 @@
-name: Run Bot 24/7
+name: Smart Restart Bot
 
 on:
-  push:
   schedule:
     - cron: "*/5 * * * *"
 
@@ -10,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -18,14 +17,29 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Run Commands
+      - name: Smart Control
         run: |
-          ls
-          unzip -o Dipak.zip
-          ls
+          echo "Checking bot state..."
+
+          # Agar lock file exist karta hai → bot already running (skip)
+          if [ -f "running.lock" ]; then
+            echo "Bot already running, skipping..."
+            exit 0
+          fi
+
+          echo "Bot not running, starting..."
+
+          # Lock create karo
+          touch running.lock
+
+          unzip -n Dipak.zip
           cd Dipak
-          ls
           pip install telebot
           chmod +x *
-          ls
+
+          # Run bot
           python m.py
+
+          # Jab bot band ho jaye → lock remove
+          cd ..
+          rm -f running.lock
